@@ -91,7 +91,7 @@ class User < Principal
   attr_accessor :password, :password_confirmation
   attr_accessor :last_before_login_on
   # Prevents unauthorized assignments
-  attr_protected :login, :admin, :password, :password_confirmation, :hashed_password
+  attr_protected :login, :admin, :password, :password_confirmation
 
   validates_presence_of :login,
                         :firstname,
@@ -132,12 +132,15 @@ class User < Principal
     true
   end
 
-  # update hashed_password if password was set
+  # create new password if password was set
   def update_password
     if password && auth_source_id.blank?
       new_password = passwords.build()
       new_password.plain_password = password
       new_password.save
+
+      # force reload of passwords, so the new password is sorted to the top
+      passwords(true)
 
       clean_up_former_passwords
     end
@@ -645,7 +648,7 @@ class User < Principal
 
   # Password requirement validation based on settings
   def password_meets_requirements
-      # Passwords are stored hashed in self.hashed_password,
+      # Passwords are stored hashed as UserPasswords,
       # self.password is only set when it was changed after the last
       # save. Otherwise, password is nil.
       unless password.nil? or anonymous?
@@ -694,7 +697,7 @@ class User < Principal
   def clean_up_former_passwords
     # minimum 1 to keep the actual user password
     keep_count = [1, Setting[:password_count_former_banned].to_i].max
-    passwords[keep_count..-1].each { |p| p.destroy }
+    (passwords[keep_count..-1] || []).each { |p| p.destroy }
   end
 
   def reassign_associated
