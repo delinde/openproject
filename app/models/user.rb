@@ -132,6 +132,10 @@ class User < Principal
     true
   end
 
+  def current_password
+    self.passwords.first
+  end
+
   # create new password if password was set
   def update_password
     if password && auth_source_id.blank?
@@ -683,10 +687,6 @@ class User < Principal
 
   def candidates_for_project_allowance project
     @registered_allowance_evaluators.map{ |f| f.project_granting_candidates(project) }.flatten.uniq
-  end
-
-  def current_password
-    self.passwords.first
   end
 
   def former_passwords_include?(password)
