@@ -293,6 +293,7 @@ class User < Principal
     if auth_source_id.present?
       auth_source.authenticate(self.login, clear_password)
     else
+      return false if current_password.nil?
       current_password.same_as_plain_password?(clear_password)
     end
   end
