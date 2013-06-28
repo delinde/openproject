@@ -35,7 +35,7 @@ describe MyController, :type => :controller do
     describe 'with wrong password' do
       render_views
       before do
-        @hashed_password = user.hashed_password
+        @current_password = user.current_password.id
         post :change_password, :password => 'wrongpassword',
                                :new_password => 'adminADMIN!New',
                                :new_password_confirmation => 'adminADMIN!New'
@@ -48,7 +48,7 @@ describe MyController, :type => :controller do
       end
 
       it 'should not change the password' do
-        user.hashed_password.should == @hashed_password
+        user.current_password.id.should == @current_password
       end
     end
 
