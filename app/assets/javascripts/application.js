@@ -576,7 +576,7 @@ jQuery(document).ready(function($) {
       request.setRequestHeader(header, token);
     }
 
-    request.setRequestHeader('X-ACCEPT-AUTH', "Session");
+    request.setRequestHeader('X-Authentication-Scheme', "Session");
   });
   // ajaxStop gets called when ALL Requests finish, so we won't need a counter as in PT
   $(document).ajaxStop(function () {
