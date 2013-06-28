@@ -33,13 +33,13 @@ def fill_change_password(old_password, new_password, confirmation=new_password)
   fill_in('new_password', :with => new_password)
   fill_in('new_password_confirmation', :with => confirmation)
   click_link_or_button 'Apply'
-  @new_password = new_password
+  @password = new_password
 end
 
 When /^I try to set my new password to "(.+)"$/ do |password|
   visit "/my/password"
   fill_change_password('adminADMIN!', password)
-  @new_password = password
+  @password = password
 end
 
 When /^I fill out the change password form$/ do
@@ -60,17 +60,17 @@ end
 
 Then /^I should be able to login using the new password$/ do
   visit('/logout')
-  login(@user.login, @new_password)
+  login(@user.login, @password)
 end
 
 Given /^I try to log in with user "([^"]*)"$/ do |login|
   step 'I go to the logout page'
-  step 'I go to the login page'
-  with_scope('#main') do
-    fill_in('Login', :with => login)
-    fill_in('Password', :with => (@new_password || 'adminADMIN!'))
-    click_link_or_button('Login')
-  end
+  login(login, @password || 'adminADMIN!')
+end
+
+Given /^I try to log in with user "([^"]*)" and a wrong password$/ do |login|
+  step 'I go to the logout page'
+  login(login, 'Wrong password')
 end
 
 When /^I activate the ([a-z, ]+) password rules$/ do |rules|
