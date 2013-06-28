@@ -66,7 +66,7 @@ class User < Principal
                      :dependent => :delete_all
   has_many :changesets, :dependent => :nullify
   has_many :passwords, :class_name => 'UserPassword',
-                       :order => 'created_at DESC',
+                       :order => 'id DESC',
                        :readonly => true,
                        :dependent => :destroy,
                        :inverse_of => :user
