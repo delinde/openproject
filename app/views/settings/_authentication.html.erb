@@ -30,6 +30,12 @@ See doc/COPYRIGHT.rdoc for more details.
 
 <p><%= setting_check_box :lost_password, :label => :label_password_lost %></p>
 
+  <fieldset>
+    <legend><%= I18n.t(:brute_force_prevention, :scope => [:settings]) %></legend>
+    <p><%= setting_text_field :brute_force_block_after_failed_logins %></p>
+    <p><%= setting_text_field :brute_force_block_minutes %></p>
+  </fieldset>
+
 <p><%= setting_check_box :openid, :disabled => !Object.const_defined?(:OpenID) %></p>
 
 <p><%= setting_check_box :rest_api_enabled %></p>
